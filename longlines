@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+"""Report long lines in input files.  By default, the character limit
+in a line is 80 but this can be changed via the -l qualifier."""
+import sys, argparse
+
+# Set up the parsing of the command line, then parse it.
+parser = argparse.ArgumentParser (description=__doc__)
+
+parser.add_argument ('-l', type=int, default=80,
+                     help='maximum length of a valid line')
+parser.add_argument ('files', nargs='*')
+
+args = parser.parse_args ()
+
+# Our main loop is over the files.  Open the files and work through the lines
+# in turn.
+for fn in args.files:
+    with open (fn) as f:
+        if len (args.files) > 1: print (fn + ":")
+        for line in f:
+            # If a line is longer than the limit after removing trailing
+            # whitespace, report it.
+            line = line.rstrip ()
+            l = len (line)
+            if l > args.l:
+                print ("  ", l, line)
+
+# End of longlines.
